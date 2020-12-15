@@ -1,0 +1,288 @@
+<%- include elements/header.ejs %>	
+ 
+<section class="breadcrumbs">
+	<div class="container">
+		<div class="breadcrumb">
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li>Men</li>
+			</ul>
+		</div>
+	</div>
+</section>
+
+<section class="listing_pageMn">
+	<div class="container">
+		<div class="listing_page">
+			 <div class="page_heading mobile_heading">
+			 	<h1>OUR PRODUCTS</h1>
+			 </div>				
+			<div class="sb_filter_toggle">Filter</div>
+			<aside class="listing_sidebar">
+				<form action="" method="get" id="form-search">
+				<div class="sb_filterMn">
+					<div id="sbcategory-head" class="sb_filter_title">
+						<h2>Filter by Category</h2>
+					</div>
+					<div id="sbcategory-content" class="sb_filter_content sb_filter_checkbox">
+						<ul>
+							<% if(categoryLists.length){  
+                            for(var c = 0;c < categoryLists.length;c++) {
+                            %>
+							<li>
+								<label class="sb_checkbox"><%=categoryLists[c].name%> 
+								  <input type="checkbox" name="category[]" value="<%=categoryLists[c].id%>" <%=categoryLists[c].checked%>>
+								  <span class="checkmark"></span>
+								</label>		
+								<div class="sb-count">(<%=categoryLists[c].count%>)</div>
+							</li>
+							<% } } %>
+							 																		
+						</ul>
+					</div>					
+				</div>
+				<div class="sb_filterMn">
+					<div id="sbbrand-head" class="sb_filter_title">
+						<h2>Filter by Brand</h2>
+					</div>
+					<div id="sbbrand-content" class="sb_filter_content sb_filter_checkbox">
+						<ul>
+							<% if(brandLists.length){  
+							  	
+                            for(var b = 0;b < brandLists.length;b++) { %>
+							<li>
+								<label class="sb_checkbox"><%=brandLists[b].name%>
+								  <input type="checkbox" name="brand[]" value="<%=brandLists[b].id%>" <%=brandLists[b].checked%>>
+								  <span class="checkmark"></span>
+								</label>		
+								<div class="sb-count">(<%=brandLists[b].count%>)</div>
+							</li>
+							<% } } %>
+							 																			
+						</ul>
+					</div>					
+				</div>
+				<div class="sb_filterMn">
+					<div id="sbcolor-head" class="sb_filter_title">
+						<h2>Filter by Color</h2>
+					</div>
+					<div id="sbcolor-content" class="sb_filter_content sb_filter_color">
+						<ul>
+							<% if(colorLists.length){  
+                            for(var cl = 0;cl < colorLists.length;cl++) { %>
+						 		<li style="background-color: <%=colorLists[cl].clrCode%>;"><a href="javascript:;"></a></li>
+						 	<% } } %>	
+						  
+						</ul>
+					</div>					
+				</div>
+				<div class="sb_filterMn">
+					<div id="sbprice-head" class="sb_filter_title">
+						<h2>Filter by Price</h2>
+					</div>
+					<div id="sbprice-content" class="sb_filter_content sb_filter_price">
+					  <div class="slider-labels">
+					    <div class="caption">
+					     <span id="slider-range-value1"><%=MinPrice%></span>
+					    </div>
+					    <div class="caption">
+					      <span id="slider-range-value2"><%=MaxPrice%></span>
+					    </div>
+					  </div>
+					  <div class="pr-range-wrap">
+					  	<div id="slider-range"></div>
+					  </div>
+				 </div>					
+				</div>
+				</form>
+			</aside>
+			<main class="listing-productsMn">
+			 <div class="page_heading">
+			 	<h1>OUR PRODUCTS</h1>
+			 </div>	
+			 <div class="listing_actionBar">
+			 	<div class="sortby">
+			 		<select name="sort" id="sort">
+			 			<option value="" selected="">Sort by Position</option>
+			            <option value="featured">Featured Items</option>
+			            <option value="newest">Newest Items</option>
+			            <option value="bestselling">Best Selling</option>
+			            <option value="alphaasc">A to Z</option>
+			            <option value="alphadesc">Z to A</option>
+			            <option value="avgcustomerreview">By Review</option>
+			            <option value="priceasc">Price: Ascending</option>
+			            <option value="pricedesc">Price: Descending</option>
+			        </select>
+			 	</div>
+			 	<div class="paginationMn">
+			 		<% if (total_page > 0) { %>
+			 			<% if (current_page != 1) { %>
+	                        <div class="page_prev"><a href="<%=checkedcondition(fullUrl,'page',(Number(current_page)-1))%>">Prev</a></div>
+	                   	<% } %>
+	                 <div class="pagination">
+			 			<ul>
+	                    <% var i = (Number(current_page) > 5 ? Number(current_page) - 4 : 1) %>
+	                    <% if (i !== 1) { %>
+	                        <li class="disabled"><a>...</a></li>
+	                    <% } %>
+	                    <% for (; i <= (Number(current_page) + 4) && i <= total_page; i++) { %>
+	                        <% if (i == current_page) { %>
+	                            <li class="active"><a><%= i %></a></li>
+	                        <% } else { %>
+	                            <li><a href="<%=checkedcondition(fullUrl,'page',(Number(i)))%>"><%= i %></a></li>
+	                        <% } %>
+	                        <% if (i == Number(current_page) + 4 && i < total_page) { %>
+	                            <li class="disabled"><a>...</a></li>
+	                        <% } %>
+	                    <% } %>
+	                 	</ul>
+	                 	<% if (current_page != total_page) { %>
+	                        <div class="page_next"><a href="<%=checkedcondition(fullUrl,'page',(Number(current_page) + 1 ))%>">Next</a></div>
+	                    <% } %>
+			 		</div>
+	            <% } %>
+			 	</div>
+
+		 	</div>
+			 <div class="listing-products">
+			  <div class="product_grid">
+				<ul>
+					 <% if(allProduct.length){  
+                            for(var i = 0;i < allProduct.length;i++) { %>
+					<li>
+						<article class="product-grid_artcile">
+						 <figure class="product-grid-figure">
+				          <a class="product-grid-image-wrap" href="#"><img src="<%=allProduct[i].default_image%>" alt="<%=allProduct[i].title%>" title="<%=allProduct[i].title%>"></a>
+				           <figcaption class="product-grid-figcaption">				            
+                            <div class="product-grid_floating-badges">                      
+                            	<span class="new badge">New</span>                            
+                            </div>
+                            <div class="product-grid_floating-icons">
+                            	<div class="wishlist_floating"><a href="javascript:;"><i class="far fa-heart"></i></a></div>
+                            	<div class="addtocart_floating"><a href="#">Add to Cart</a></div>
+                            </div>				          
+				           </figcaption>
+   						  </figure>
+   						  <div class="product-grid_content">
+   						  	<div class="title">
+   						  		<h3><a href=""><%=allProduct[i].title%></a></h3>   						  		
+   						  	</div>
+   						  	<div class="product-grid_rating">
+   						  		<div class="prodgrid_star">
+   						  			<ul>
+   						  				<li><a href="#"><i class="fas fa-star"></i></a></li>
+   						  				<li><a href="#"><i class="fas fa-star"></i></a></li>
+   						  				<li><a href="#"><i class="fas fa-star"></i></a></li>
+   						  				<li><a href="#"><i class="fas fa-star"></i></a></li>
+   						  				<li><a href="#"><i class="far fa-star"></i></a></li>
+   						  			</ul>
+   						  		</div>
+   						  		<div class="prodgrid-rating_count">(45)</div>
+   						  	</div>
+   						  	<div class="product-grid_price">
+   						  		<% if(allProduct[i].discount > 0){%>
+			                    <span class="discounted-price"><%=allProduct[i].discounted_price%></span>
+			                    <span class="main-price discounted"><%=allProduct[i].price%></span>
+			                    <span class="yousave-price"><%=allProduct[i].discount%>% Off</span>
+			                    <% } else { %>
+			                    <span class="discounted-price"><%=allProduct[i].price%></span> 
+			                    <% } %>
+   						  	</div>
+   						  </div>
+						</article>
+					</li>
+					 <% }  } %>
+					    																				
+				</ul>
+			</div>			 	
+			 </div>
+
+			 <div class="listing_actionBar lp_bottom">
+			 	<div class="paginationMn">
+			 		<% if (total_page > 0) { %>
+			 			<% if (current_page != 1) { %>
+	                        <div class="page_prev"><a href="<%=checkedcondition(fullUrl,'page',(Number(current_page)-1))%>">Prev</a></div>
+	                   	<% } %>
+	                 <div class="pagination">
+			 			<ul>
+	                    <% var i = (Number(current_page) > 5 ? Number(current_page) - 4 : 1) %>
+	                    <% if (i !== 1) { %>
+	                        <li class="disabled"><a>...</a></li>
+	                    <% } %>
+	                    <% for (; i <= (Number(current_page) + 4) && i <= total_page; i++) { %>
+	                        <% if (i == current_page) { %>
+	                            <li class="active"><a><%= i %></a></li>
+	                        <% } else { %>
+	                            <li><a href="<%=checkedcondition(fullUrl,'page',(Number(i)))%>"><%= i %></a></li>
+	                        <% } %>
+	                        <% if (i == Number(current_page) + 4 && i < total_page) { %>
+	                            <li class="disabled"><a>...</a></li>
+	                        <% } %>
+	                    <% } %>
+	                 	</ul>
+	                 	<% if (current_page != total_page) { %>
+	                        <div class="page_next"><a href="<%=checkedcondition(fullUrl,'page',(Number(current_page) + 1 ))%>">Next</a></div>
+	                    <% } %>
+			 		</div>
+
+	            <% } %>
+ 					
+			 		
+			 	</div>
+			 </div>
+
+
+			</main>
+		</div>
+	</div>
+</section>
+
+
+
+
+<%- include elements/footer.ejs %>
+<script type="text/javascript">
+	var minPrice = <%=MinPrice%>
+	var maxPrice = <%=MaxPrice%>
+$( "#sort" ).change(function() {
+	var newURL = window.location.protocol + "//" + window.location.host +  window.location.pathname + window.location.search
+	
+	var newUrl = updateQueryStringParameter(newURL,'sort',this.value);
+	window.location.href = newUrl
+});
+
+function updateQueryStringParameter(uri, key, value) {
+  var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+  var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+  if (uri.match(re)) {
+    return uri.replace(re, '$1' + key + "=" + value + '$2');
+  }
+  else {
+    return uri + separator + key + "=" + value;
+  }
+}
+$( ".listing_sidebar input[type='checkbox']" ).click(function() {
+  	$('#form-search').submit();
+});
+$( document ).ready(function() {
+    var newURL = window.location.protocol + "//" + window.location.host +  window.location.pathname + window.location.search
+    $('#form-search').attr('href',newURL);
+});
+
+
+
+
+</script>
+<script src="<%=nodeSiteUrl%>/js/pricerange.js"></script>
+<%
+function checkedcondition(uri, key, value) {
+  	var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+  	var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+  	if (uri.match(re)) {
+	    return uri.replace(re, '$1' + key + "=" + value + '$2');
+  	}
+	else {
+	    return uri + separator + key + "=" + value;
+	}
+}
+%>

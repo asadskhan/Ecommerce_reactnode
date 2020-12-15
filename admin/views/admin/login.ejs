@@ -1,0 +1,47 @@
+<%- include elements/loginheader.ejs %> 
+
+
+<div class="login-box">
+  <div class="login-logo">
+    <a href="<?php echo base_url(); ?>"><img src="<?php echo base_url(); ?>assets/frontend/images/Ecommerce-trans.png" alt="Ecommerce" title="Ecommerce"></a>
+  </div>
+  <!-- /.login-logo -->
+  <div class="login-box-body">
+    <p class="login-box-msg">Sign in to start your session</p>
+
+        <div class="space-6"></div>
+     
+        <form method="post" action="/admin/login">
+        <div class="form-group has-feedback <?php if (form_error('email')) echo 'has-error'; ?>">
+            <input type="email" class="form-control" placeholder="Email" id="email" name="email" autofocus value="<%=data.email%>"  />
+            <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+            <span class="error"><%=errorData.email%> </span> 
+        </div>
+        <div class="form-group has-feedback <?php if (form_error('password')) echo 'has-error'; ?>">
+            <input type="password" id="password" class="form-control" placeholder="Password" name="password" value="<%=data.password%>" >
+            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            <span class="error"><%=errorData.password%> </span> 
+        </div>
+        <div class="row">
+            <div class="col-xs-8">
+              <div class="checkbox icheck">
+                <label>
+                  <!-- <a href="<?php echo base_url('admin/forgot_password')?>">Forgot password</a><br> -->
+                  <!--<input type="checkbox"> Remember Me-->
+                </label>
+              </div>
+            </div>
+            <!-- /.col -->
+            <div class="col-xs-4">
+              <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+            </div>
+            <!-- /.col -->
+        </div>
+        </form>
+    </div>
+    <!-- /.login-box-body -->
+</div>
+<!-- /.login-box -->
+
+ 
+<%- include elements/loginfooter.ejs %>  

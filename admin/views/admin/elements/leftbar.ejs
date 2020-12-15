@@ -1,0 +1,109 @@
+<!-- Left side column. contains the logo and sidebar -->
+ <aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+      <!-- Sidebar user panel -->
+      <div class="user-panel">
+        <div class="pull-left image">
+          <img src="/images/sec_logo.jpg" class="img-circle" alt="User Image">
+        </div>
+        <div class="pull-left info">
+          <p>Admin</p>
+          <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+        </div>
+      </div>
+      <!-- search form -->
+       
+      <!-- /.search form -->
+       
+      <!-- sidebar menu: : style can be found in sidebar.less -->
+      <ul class="sidebar-menu" data-widget="tree">
+        <li class="header">MAIN NAVIGATION</li>
+        
+        <!-- Check permission -->
+         
+        <li class="active">
+          <a href="#">
+            <i class="fa fa-dashboard"></i> 
+            <span>Dashboard</span> 
+          </a> 
+        </li>
+         
+         
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-laptop"></i>
+            <span>Master</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+          
+            <!-- <li class=""><a href="#"><i class="fa fa-circle-o"></i> Pages </a></li>
+           
+            <li class=""><a href="#"><i class="fa fa-circle-o"></i>Role</a></li>
+           
+            <li class=""><a href="#"><i class="fa fa-circle-o"></i>Module</a></li>
+           
+            <li class=""><a href="#"><i class="fa fa-circle-o"></i>Location</a></li> -->
+            
+            <li class="#"><a href="/admin/Banner/list"><i class="fa fa-circle-o"></i>Home Banner</a></li>
+
+            <li class="#"><a href="/admin/Categories/list"><i class="fa fa-circle-o"></i>Category</a></li>
+
+            <li class="#"><a href="/admin/Brand/list"><i class="fa fa-circle-o"></i>Brand</a></li>
+
+            <li class="#"><a href="/admin/color/list"><i class="fa fa-circle-o"></i>Color</a></li>
+
+          </ul>
+        </li>  
+         
+        <li class="treeview">
+          <a href="#">
+              <i class="glyphicon glyphicon-user"></i> 
+              <span>Users</span> 
+              <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+              </span>
+          </a> 
+          <ul class="treeview-menu">
+            <li>
+              <a href="/admin/Users/list"><i class="glyphicon glyphicon-user"></i> Users</a>
+            </li>
+          </ul>
+        </li>
+         
+         
+        <li class="">
+          <a href="<%=nodeAdminUrl%>/Products/list">
+            <i class="glyphicon glyphicon-heart"></i> 
+            <span>Products</span> 
+          </a> 
+        </li>
+         
+        <li class="treeview">        
+           <a href="#">
+            <i class="glyphicon glyphicon-book"></i>
+            <span>Blog</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li class=""><a href="<%=nodeAdminUrl%>/Blog/list"><i class="fa fa-circle-o"></i> Blog </a></li>
+             
+            <li class=""><a href="<%=nodeAdminUrl%>/Category/list"><i class="fa fa-circle-o"></i> Category </a></li>
+              
+            <!-- <li class=""><a href=""><i class="fa fa-circle-o"></i> Comment </a></li> -->
+             
+          </ul>
+        </li>
+              
+        
+            
+            
+      </ul>
+    </section>
+    <!-- /.sidebar -->
+  </aside>

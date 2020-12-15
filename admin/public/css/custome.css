@@ -1,0 +1,72 @@
+.box-header{ border-bottom: 2px solid #E6E9ED;  }
+.action-buttons {
+    text-align: center;
+    font-size: 110%;
+}
+.action-buttons a {
+    display: inline-block;
+    padding: 0px 5px;
+}
+.searchbutton { margin-top: 24px; }
+.add_more { padding: 13px !important; }
+.clear{ clear: both; }
+
+.required_star{
+	color:#E74C3C;
+}
+
+
+ 
+  .select2-selection--multiple {
+    position: relative; 
+  }
+  .select2-selection--multiple :before {
+      content: ' ';
+      display: block;
+      position: absolute;
+      top: 1px;
+      right: 0;
+      bottom: 0;
+      width: 20px;
+      background: url('http://s13.postimg.org/561ktz86b/select2.png') 0 1px no-repeat;
+      cursor: pointer;
+    }
+   .select2-selection--multiple:before {
+      
+      background-position: -18px 1px;
+    }
+    .select2-container--open .select2-selection--multiple :before {
+      content: ' ';
+      display: block;
+      position: absolute;
+      top: 1px;
+      right: 0;
+      bottom: 0;
+      width: 20px;
+      background: url('http://s13.postimg.org/561ktz86b/select2.png') -18px 1px no-repeat;
+      cursor: pointer;
+    }
+
+    
+  
+.select2-dropdown .select2-search__field:focus, .select2-search--inline .select2-search__field:focus{ border:none; }
+
+.inputdate input[type="text"]{ background: #f1f1f1 url("date_picker.png") no-repeat 10px center; padding-left:36px;}
+.images { float: left;width: 100%; }
+.images ul{ float: left;list-style:none; display: inline-block; }
+.images ul li{  display: inline-block; margin-right: 154px; margin-bottom: 16px;  }
+.inside_image { float: left;display: inline-block;position: relative; }
+
+.images ul li:nth-child(5n){  margin-right: 0px; }
+
+.inside_image .bottom_section{ float: left;width: 100%; margin-top:6px; }
+.bottom_section .image_base{ float: right; }
+
+.galleryimages { float: left;width: 100%; }
+.galleryimages ul{ float: left;list-style:none; display: inline-block; }
+.galleryimages ul li{  display: inline-block; margin-right: 154px; margin-bottom: 16px;  }
+  
+.form-group.has-error .select2{
+  border:1px solid #dd4b39;
+  box-shadow:none;
+}

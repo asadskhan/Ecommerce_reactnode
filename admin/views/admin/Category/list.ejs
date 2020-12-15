@@ -1,0 +1,160 @@
+<%- include('../elements/header'); %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+   <!-- Content Header (Page header) -->
+   <section class="content-header">
+      <h1> Category Management </h1>
+      <ul class="breadcrumb">
+        <li> <i class="ace-icon fa fa-tachometer"></i> <a href="<%=nodeAdminUrl%>/Dashboard">Dashboard</a> </li>
+        <li class="active">Category List</li>
+      </ul>
+   </section>
+   <div class="col-md-12" id="page-message">
+    <%- include ../elements/flash.ejs %>    </div>
+   <!-- Main content -->
+   <section class="content">
+      <div class="row">
+         <div class="col-xs-12">
+            <div class="box">
+               <div class="box-header"> 
+                  <div class="pull-right">
+                    <!-- <?php if($this->general->check_permission('7','delete_p')){ ?> -->
+                      <a href="<%=nodeAdminUrl%>/<%=controller%>/add%>" class="btn btn-primary"><i class="fa fa-plus"></i> Add</a>
+                    <!-- <?php }  ?> -->
+                  </div>
+               </div>
+                
+               <!-- /.box-header -->
+               <div class="box-body">
+                  <!-- <?php echo form_open(base_url('admin/'.$this->controllerName.'/deleteSelected'), array('name' => 'frmlist','id'=>'frmlist')) ?> -->
+                  <table id="example1" class="table table-bordered table-striped">
+                     <thead>
+                        <tr>
+                            
+                            <th>S.NO.</th>
+                            <th>Name</th>
+                            <th> <i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i> Status </th>
+                            <th class="hidden-480">Action</th> 
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <% if(data.length){  
+                            for(var i = 0;i < data.length;i++) { %>
+                          <tr>
+                                
+                                <td> <a href="#"><%=i+1%></a>  </td>
+                                <td style="width: 37%;"><%=data[i].category_name%></td>
+                                <td class="hidden-480">
+                                    <%if(data[i].status == 1){  %>
+                                    <span class="label label-sm label-success">Active</span>
+                                    <% }else{ %> 
+                                        <span class="label label-sm label-warning">Deactivate</span> 
+                                    <%}%>
+                                </td>
+                                <td class="hidden-480">
+                                    <div class="hidden-sm hidden-xs action-buttons">
+                                        
+                                        <a class="green" href="<%=nodeAdminUrl%>/category/edit/<%=data[i].id%>"> <i class="ace-icon fa fa-pencil bigger-130"></i> </a>   
+                                        <a class="red" onclick="return confirm('Are you sure you want to delete this ?')" href="<%=nodeAdminUrl%>/category/delete/<%=data[i].id%>" > <i class="ace-icon fa fa-trash-o bigger-130"></i>  </a>  
+                                    </div> 
+                                </td>
+                              
+                          </tr>   
+
+                        <% }  } %> 
+                    </tbody>
+                  </table>
+                  <!-- <?php echo form_close(); ?> -->
+               </div>
+               <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+         </div>
+         <!-- /.col -->
+      </div>
+      <!-- /.row -->
+   </section>
+   <!-- /.content -->
+</div>
+<!--  Custome css -->
+<%- include('../elements/footer'); %> 
+<!-- <link rel="stylesheet" href="<%=nodeSiteUrl%>/bootstrap/css/custome.css"> -->
+<!-- DataTables -->
+<link rel="stylesheet" href="<%=nodeSiteUrl%>/plugins/datatables/dataTables.bootstrap.css">
+<!-- DataTables -->
+<script src="<%=nodeSiteUrl%>/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<%=nodeSiteUrl%>/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- iCheck for checkboxes and radio inputs -->
+<link rel="stylesheet" href="<%=nodeSiteUrl%>/plugins/iCheck/all.css">
+<!-- iCheck 1.0.1 -->
+<script src="<%=nodeSiteUrl%>/plugins/iCheck/icheck.min.js"></script>
+
+<!-- daterange picker script -->
+<!-- daterange picker -->
+<!-- <link rel="stylesheet" href="<%=nodeSiteUrl%>/plugins/daterangepicker/daterangepicker.css"> -->
+<!-- bootstrap datepicker -->
+<link rel="stylesheet" href="<%=nodeSiteUrl%>/plugins/datepicker/datepicker3.css">
+<!-- Date Range Picker -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+<!-- <script src="<%=nodeSiteUrl%>/plugins/daterangepicker/daterangepicker.js"></script> -->
+<!-- bootstrap datepicker -->
+<script src="<%=nodeSiteUrl%>/plugins/datepicker/bootstrap-datepicker.js"></script>
+
+<!-- page script -->
+
+<script>
+   $(function () {
+     $("#example1").DataTable({
+         "pageLength": 50,
+         "fnDrawCallback": function () { 
+             $('input.flat').iCheck({
+                 checkboxClass: 'icheckbox_flat-green'
+             });
+             $('#example1 input#check-all').on('ifChecked', function () {
+                 checkState = 'all';
+                 countChecked();
+             });
+             $('#example1 input#check-all').on('ifUnchecked', function () {       
+                 checkState = 'none';
+                 countChecked();
+             });
+         },
+     });
+     
+   });
+   
+   // iCheck   
+   function countChecked() {
+      
+     if (checkState === 'all') {
+         $("#example1 input[name='chkTableRow[]']").iCheck('check');
+     }
+     if (checkState === 'none') {
+         $("#example1 input[name='chkTableRow[]']").iCheck('uncheck');
+     } 
+     
+   }
+   
+   
+   
+   // /iCheck
+   
+   function checkDelete(){
+     var checkCount = $("#example1 input[name='chkTableRow[]']:checked").length;
+     if(checkCount > 0){
+         if(confirm('Do you want to delete?')){
+             $('#frmlist').submit();
+         }
+     }else{
+         alert('Please select atleast one record to delete.');
+         return false;
+     }
+   }
+   
+
+/*function export_csv(){
+  var daterange = $('#daterange').val();
+  document.location.href = "<?php echo base_url('admin/'.$this->controllerName.'/download_report?daterange=');?>"+daterange;
+}*/
+</script>

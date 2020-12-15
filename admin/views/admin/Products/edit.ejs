@@ -1,0 +1,304 @@
+<%- include('../elements/header'); %> 
+ 
+<div class="clearfix"></div>
+<style type="text/css">
+  .form-group.has-error .select2{
+    border:1px solid #dd4b39;
+    box-shadow:none;
+  }
+</style>
+<!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+     <ol class="breadcrumb">
+        <li> <i class="ace-icon fa fa-tachometer"></i> <a href="<%=nodeAdminUrl%>/Dashboard">Dashboard</a> </li>
+                    <li class="active"><a href="<%=nodeAdminUrl%>/products/list"> Products </a> </li>
+                    <li class="active"><%=action%></li>
+      </ol>
+      <h1>
+        Add New <%=controller%>
+      </h1>
+     
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <!-- left column -->
+        <div class="col-md-8">
+            <div class="panel">
+            <!-- general form elements -->
+            <div class="box box-primary">
+                
+                <div class="box-header with-border"> <%- include ../elements/flash.ejs %>  </div>
+
+                <!-- form start -->
+                <form method="post" action="<%=nodeAdminUrl%>/<%=controller%>/edit/<%=data[0].id%>" enctype="multipart/form-data">
+                <input type="hidden" value="<%=data[0].id%>" name="id"> 
+                
+                <div class="box-body">
+                    
+                    <div class="form-group <%=(errorData.category_id)?'has-error':''%>">
+                        <label for="form-field-category-id">Category</label>
+                        <select class="form-control" name="category_id" id="form-field-category-id">
+                            <%  
+                            for ( var i = 0; i < categories.length; i++ ) {
+                                var selected = ( categories[i].id == data[0].category_id ) ? "selected" : "";
+                            %><option value="<%=categories[ i ].id %>" <%=selected %>><%=categories[ i ].title %></option><%
+                            }
+                            %>  
+                        </select> 
+                        <span for="title" class="help-block" ><%=errorData.category_id%></span>  
+                    </div>  
+
+                    <div class="form-group <%=(errorData.sub_category_id)?'has-error':''%>">
+                        <label for="form-field-sub-category-id">Sub Category</label> <span class="required_star" aria-required="true"> *</span>
+                        <select class="form-control select2_sub" name="sub_category_id" id="form-field-sub-category-id" multiple="">
+                            <option value="">Select Sub Category</option>
+                            <%  
+                            var subArray = (data[0].sub_category_id!='' && data[0].sub_category_id!=null) ? data[0].sub_category_id.split(","):[];
+                            for ( var i = 0; i < subCategoryList.length; i++ ) {
+                                var selected = (subArray.indexOf(subCategoryList[i].id) < 0) ? "selected='selected'" : ""
+                            %><option value="<%=subCategoryList[ i ].id %>" <%=selected %>><%=subCategoryList[ i ].title %></option><%
+                            }
+                            %>  
+                        </select> 
+                        <span  class="help-block" ><%=errorData.sub_category_id%></span>  
+                    </div>
+
+                    <div class="form-group <%=(errorData.brand)?'has-error':''%>">
+                        <label for="form-field-brand-id">Brand</label> <span class="required_star" aria-required="true"> *</span>
+                        <select class="form-control" name="brand" id="form-field-brand-id">
+                            <option value="">Select Brand</option>
+                            <%  
+                            for ( var i = 0; i < brands.length; i++ ) {
+                                var selected = ( brands[i].id == data[0].brand ) ? "selected" : "";
+                            %><option value="<%=brands[ i ].id %>" <%=selected %>><%=brands[ i ].title %></option><%
+                            }
+                            %>  
+                        </select> 
+                        <span  class="help-block" ><%=errorData.brand%></span>  
+                    </div>
+
+                    <div class="form-group <%=(errorData.color)?'has-error':''%>">
+                        <label for="form-field-color-id">Color</label> <span class="required_star" aria-required="true"> *</span>
+                        <select class="form-control select2" name="color" id="form-field-color-id" multiple="multiple">
+                            <option value="" disabled="">Select Color</option>
+                            <%  
+                            var colorArray = (data[0].color!='' && data[0].color!=null) ? data[0].color.split(","):[];
+                            for ( var i = 0; i < colors.length; i++ ) {
+                                var selected = (colorArray.indexOf(colors[i].id) < 0) ? "selected='selected'" : ""
+                            %><option value="<%=colors[ i ].id %>" <%=selected %>><%=colors[ i ].title %></option><%
+                            }
+                            %>  
+                        </select> 
+                        <span  class="help-block" ><%=errorData.color%></span>   
+                    </div>
+
+                    <div class="form-group <%=(errorData.title)?'has-error':''%>">
+                        <label for="form-field-title">Title</label><span class="required_star" aria-required="true"> *</span>
+                        <input type="text" name="title" value="<%=data[0].title%>" id="form-field-title" placeholder="Title" class="form-control" onkeypress="convertToSlug(this.value)" onblur="convertToSlug(this.value)" onkeyup="convertToSlug(this.value)" id="form-field-title"  >
+                        <span for="title" class="help-block"><%=errorData.title%></span>
+                    </div>    
+
+                    <div class="form-group <%=(errorData.slug)?'has-error':''%>">
+                        <label for="form-field-slug">Product URL (Slug)</label><span class="required_star" aria-required="true"> *</span>
+                        <input type="text" class="form-control" name="slug" value="<%=data[0].slug%>" placeholder="Slug" id="form-field-slug"/>
+                        <span for="slug" class="help-block"><%=errorData.slug%></span>
+                    </div> 
+
+                    <div class="form-group <%=(errorData.description)?'has-error':''%>">
+                        <label for="form-field-description">Description</label><span class="required_star" aria-required="true"> *</span>
+                        <textarea  class="form-control" rows="5" name="description" placeholder="Description" ><%=data[0].description%> </textarea> 
+                        <span for="description" class="help-block" ><%=errorData.description%></span> 
+                    </div>  
+
+                    <div class="form-group <%=(errorData.specification)?'has-error':''%>">
+                        <label for="form-field-specification">Specification</label><span class="required_star" aria-required="true"> *</span>
+                        <textarea class="form-control" name="specification" placeholder="Enter Specification" id="form-field-specification"><%=data[0].specification%></textarea> 
+                        <span for="title" class="help-block" ><%=errorData.specification%></span>
+                    </div>
+
+                    <div class="form-group <%=(errorData.is_featured)?'has-error':''%>">
+                        <label for="form-field-is_featured"> Is Featured?</label>
+                        <input type="checkbox" name="is_featured" value="1" <%=data[0].is_featured==1 ? 'checked' : '' %> >  
+                        <span class="help-block"><%=errorData.is_featured%></span>    
+                    </div>
+
+                    <div class="form-group <%=(errorData.is_sell)?'has-error':''%>">
+                        <label for="form-field-is_sell"> Is Sell?</label>
+                        <input type="checkbox" name="is_sell" value="1" <%=data[0].is_sell==1 ? 'checked' : '' %> >  
+                        <span class="help-block"><%=errorData.is_sell%></span>    
+                    </div>
+
+                    <div class="form-group <%=(errorData.is_deal_product)?'has-error':''%>">
+                        <label for="form-field-is_deal_product"> Is Deal Product?</label>
+                        <input type="checkbox" name="is_deal_product" value="1" <%=data[0].is_deal_product==1 ? 'checked' : '' %> >  
+                        <span class="help-block"><%=errorData.is_deal_product%></span>    
+                    </div>
+
+                    <div class="form-group <%=(errorData.deal_start_time)?'has-error':''%>">
+                        <label for="form-field-deal-start-time"> Deal Start Time </label><span class="required_star" aria-required="true"> *</span>
+                        <input type="text" name="deal_start_time" value="<%=data[0].deal_start_time%>" id="form-field-deal-start-time" placeholder="Deal Start Time" class="form-control form_datetime">  
+                        <span class="help-block"><%=errorData.deal_start_time%></span>    
+                    </div>
+                    
+                    <div class="form-group <%=(errorData.deal_end_time)?'has-error':''%>">
+                        <label for="form-field-deal-end-time"> Deal End Time </label><span class="required_star" aria-required="true"> *</span>
+                        <input type="text" name="deal_end_time" value="<%=data[0].deal_end_time%>" id="form-field-deal-end-time" placeholder="Deal End Time" class="form-control form_datetime">  
+                        <span class="help-block"><%=errorData.deal_end_time%></span>    
+                    </div>
+
+                    <div class="form-group <%=(errorData.price)?'has-error':''%>">
+                        <label for="form-field-price"> Price </label><span class="required_star" aria-required="true"> *</span>
+                        <input type="text" name="price" value="<%=data[0].price%>" id="form-field-price" placeholder="Price" class="form-control">  
+                        <span class="help-block"><%=errorData.price%></span>    
+                    </div>
+
+                    <div class="form-group">
+                        <label for="form-field-discount">Discount (In %)</label>
+                        <input type="text" name="discount" value="<%=data[0].discount%>" id="form-field-discount" placeholder="Discount (In %)" class="form-control" onkeypress="getDiscountedPrice(this.value)" onblur="getDiscountedPrice(this.value)" onkeyup="getDiscountedPrice(this.value)">  
+                        <span class="help-block"><%=errorData.discount%></span> 
+                    </div>
+
+                    <div class="form-group">
+                        <label for="form-field-discounted-price">Discounted Price</label> 
+                        <input type="text" name="discounted_price" value="<%=data[0].discounted_price%>" id="form-field-discounted-price" placeholder="Discounted Price" class="form-control">
+                        <span class="help-block"><%=errorData.discounted_price%></span>   
+                    </div>  
+
+                    <div class="form-group">
+                        <label for="form-field-meta-title">Meta Title</label> 
+                        <input type="text" name="meta_title" value="<%=data[0].meta_title%>" id="form-field-meta-title" placeholder="Meta Title" class="form-control">
+                        <span for="meta-title" class="help-block"><%=errorData.meta_title%></span>   
+                    </div>
+
+                    <div class="form-group">
+                        <label for="form-field-meta-keyword">Meta Keyword</label> 
+                        <input type="text" name="meta_keyword" value="<%=data[0].meta_keyword%>" id="form-field-meta-keyword" placeholder="Meta Keyword" class="form-control">
+                        <span for="meta-keyword" class="help-block"><%=errorData.meta_keyword%></span>   
+                    </div>
+
+                    <div class="form-group">
+                        <label for="form-field-meta-description">Meta Description</label> 
+                        <input type="text" name="meta_description" value="<%=data[0].meta_description%>" id="form-field-meta-description" placeholder="Meta Description" class="form-control">
+                        <span for="meta-description" class="help-block"><%=errorData.meta_description%></span>   
+                    </div>
+
+                    <div class="form-group">
+                        <label for="form-field-status">Status</label> 
+                        <select class="form-control" name="is_active" id="form-field-status">
+                            <option value="1" <%=data[0].is_active==1 ? 'selected' : '' %>>Active</option>
+                            <option value="0"  <%=data[0].is_active==0 ? 'selected' : '' %>>Inactive</option> 
+                        </select>
+                        <span class="help-block"><%=errorData.is_active%></span>  
+                    </div>  
+                       
+                </div> 
+                <!-- /.box-body --> 
+
+                <div class="box-footer">
+                    <a href="<%=nodeAdminUrl%>/<%=controller%>/list%>"><button type="button" class="btn btn-default" >Cancel</button></a>
+                    <button type="submit" class="btn btn-info pull-right"><i class="ace-icon fa fa-check bigger-110"></i> Submit</button>
+                </div>
+
+              </form>
+
+            </div>
+            
+          <!-- /.box -->
+           </div> 
+        </div>
+        <!--/.col (left) -->
+        
+         
+        <!--/.col (right) -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+  </div>
+
+<%- include('../elements/footer'); %>  
+<script type="text/javascript" src="<%=nodeSiteUrl%>/plugins/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+$(document).ready(function () { 
+    CKEDITOR.replace('description');
+    CKEDITOR.replace('specification');
+});
+
+
+function convertToSlug(Text)
+{
+    var urltext =  Text
+        .toLowerCase()
+        .replace(/ /g,'-')
+        .replace(/[^\w-]+/g,'')
+        ;
+    $('#form-field-slug').val(urltext);
+    $('#form-field-meta-title').val(Text);
+}
+function getDiscountedPrice(percentage)
+{   
+    if(percentage > 0 ){
+        $price = $('#form-field-price').val();
+        $amount = ((parseFloat($price)*percentage) / 100).toFixed(2);
+        $discountedAmount = ($price - $amount).toFixed(2);
+        $('#form-field-discounted-price').val($discountedAmount);
+    }else{
+        $('#form-field-discounted-price').val('');
+    }
+}
+//Initialize Select2 Elements
+$(".select2").select2({
+    placeholder: 'Select color'
+});
+</script>
+<!-- bootstrap datepicker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>                       
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
+<script type="text/javascript">
+$(function () {
+    $('.form_datetime').datetimepicker({
+        format :'YYYY-MM-DD HH:mm:ss',
+    });
+});
+$(".select2_sub").select2({
+    placeholder: 'Select Sub category'
+});
+
+$('select[name="category_id"]').on('change', function() {
+        var catID = $(this).val();
+        if(catID) {
+            $.ajax({
+                url: '<%=nodeAdminUrl%>/Categories/getSubcat/'+catID,
+                type: "GET",
+                dataType: "json",
+                success:function(data) {
+                    $('select[name="sub_category_id"]').empty();
+                    $.each(data.data, function(key, value) {
+                        $('select[name="sub_category_id"]').append('<option value="'+ value.id +'">'+ value.title +'</option>');
+                    });
+                }
+            });
+        }else{
+            $('select[name="sub_category_id"]').empty();
+        }
+    });
+ 
+$("#form-field-price").on('submit blur', function (e) {
+    var price = $("#form-field-price").val();
+    var validatePrice = function(price) {
+        console.log(price);
+      return /^(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/.test(price);
+    }
+    if(!validatePrice(price)){
+        $("#form-field-price").val('');
+        // alert('Please enter valid price.'); 1212.121
+        e.preventDefault();
+        return false;
+    }
+});
+</script>

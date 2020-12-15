@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+-->
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>CKEditor Sample</title>
+	<script type="text/javascript" src="http://demo.sixpacks.com/assets/scripts/common/jquery-2.2.2.min.js"></script>
+	<script src="ckeditor.js"></script>
+</head>
+<body id="main">
+<main>
+	<form>
+		<textarea name="editor1" id="editor1" rows="10" cols="80">
+			This is my textarea to be replaced with CKEditor.
+		</textarea>
+	</form>
+</main>
+
+<script>
+	// Replace the <textarea id="editor1"> with a CKEditor
+	// instance, using default configuration.
+	CKEDITOR.replace( 'editor1' );
+</script>
+
+</body>
+</html>
