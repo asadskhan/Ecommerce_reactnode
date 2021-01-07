@@ -328,11 +328,33 @@ async function edit(req, res) {
     var colorList = {}
     if(req.params.id){
         var id =  String("'"+req.params.id+"'");   
-        entityDetail = await Products.getUserByid(id);   
+        entityDetail = await Products.getUserByid(id);
+        
         if(entityDetail.length == 0){ 
             req.flash('error', 'Invalid url')  
             return res.redirect(nodeAdminUrl+'/'+controller+'/list');  
+        }else{
+             
+            for (const item of entityDetail) { 
+                
+                if(item.sub_category_id!=''){
+                    item.sub_category_id = item.sub_category_id.split(",").map(Number);
+                }else{
+                    item.sub_category_id = [];
+                }
+
+                if(item.color!=''){
+                    item.color = item.color.split(",").map(Number);
+                }else{
+                    item.color = [];
+                }
+                
+            }
+
         }  
+
+        //console.log(entityDetail);
+
         categoryList =  await Categories.getAllParentData();
          
         const subListsData = await Categories.getAllChildData(entityDetail[0].category_id);
@@ -348,6 +370,7 @@ async function edit(req, res) {
             var input = JSON.parse(JSON.stringify(req.body));   
             
             req.checkBody('title', 'Title is required').notEmpty();
+            req.checkBody('quantity', 'Qty is required').notEmpty();
             req.checkBody('slug', 'Slug is required').notEmpty();
             req.checkBody('category_id', 'Category is required').notEmpty();
             req.checkBody('sub_category_id', 'Sub Category is required').notEmpty();
@@ -380,7 +403,7 @@ async function edit(req, res) {
                 }
             }else{
                 var checkDuplicate = await Products.checkRecordDuplication(input.slug,input.id);
-                console.log(checkDuplicate.length);
+                //console.log(checkDuplicate.length);
                 if(checkDuplicate.length > 0){
                     var msg =  controller+' already added.'; 
                     req.flash('error', msg)   
@@ -402,6 +425,10 @@ async function edit(req, res) {
                     input.is_featured = (input.is_featured === undefined)?'0':'1'
                     input.is_sell = (input.is_sell === undefined)?'0':'1'
                     input.is_deal_product = (input.is_deal_product === undefined)?'0':'1'
+                    input.deal_start_time = (input.deal_start_time != '')?input.deal_start_time:null
+                    input.deal_end_time = (input.deal_end_time != '')?input.deal_end_time:null
+
+                    // console.log("Save Data: "+input);
 
                     var saveResult = await Products.updateUserData(input);  
                     req.flash('success', msg)   
@@ -457,6 +484,7 @@ async function add(req, res) {
     if (req.method == "POST") { 
         var input = JSON.parse(JSON.stringify(req.body));
         req.checkBody('title', 'Title is required').notEmpty();
+        req.checkBody('quantity', 'Qty is required').notEmpty();
         req.checkBody('slug', 'Slug is required').notEmpty();
         req.checkBody('category_id', 'Category is required').notEmpty();
         req.checkBody('sub_category_id', 'Sub Category is required').notEmpty();
@@ -513,6 +541,9 @@ async function add(req, res) {
                 input.is_featured = (input.is_featured === undefined)?'0':'1'
                 input.is_sell = (input.is_sell === undefined)?'0':'1'
                 input.is_deal_product = (input.is_deal_product === undefined)?'0':'1'
+
+                input.deal_start_time = (input.deal_start_time != '')?input.deal_start_time:null
+                input.deal_end_time = (input.deal_end_time != '')?input.deal_end_time:null
 
                 var saveResult = await Products.saveData(input);
                 if(saveResult){

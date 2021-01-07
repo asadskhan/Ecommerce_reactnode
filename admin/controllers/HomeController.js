@@ -2,7 +2,8 @@ var dateFormat = require('dateformat');
 var Users = require.main.require('./models/Users');
 var randomstring = require("randomstring");   
 var Request = require("request"); 
-var ProductImages = require.main.require('./models/ProductImages');   
+var ProductImages = require.main.require('./models/ProductImages');
+var ProductReview = require.main.require('./models/ProductReview');
 var Products = require.main.require('./models/Products');  
 var Categories = require.main.require('./models/Categories');
 var Brand = require.main.require('./models/Brand');
@@ -302,6 +303,11 @@ async function getProductlist(req, res) {
     
     var searchCategory = (input.category)?input.category:[]
     var searchBrand = (input.brand)?input.brand:[]
+    var searchColor = (input.color)?input.color:''
+
+    var FilterminPrice = (input.color)?input.min_price:''
+    var FiltermaxPrice = (input.color)?input.max_price:''
+
     var sort = (input.sort)?input.sort:''
      
 
@@ -319,7 +325,7 @@ async function getProductlist(req, res) {
 
     var constructorArr = {}; 
  
-    var pageLimit = 10;
+    var pageLimit = 15;
     try{   
 
         let page = (input.page >0 ) ? input.page : 1;    
@@ -327,7 +333,11 @@ async function getProductlist(req, res) {
 
         data = {
             user_id:input.user_id,
+            category:searchCategory,
             brand:searchBrand,
+            color: searchColor,
+            minprice: FilterminPrice,
+            maxprice: FiltermaxPrice,
             sort:sort,
             offset:offset,
             limit:pageLimit
@@ -444,9 +454,9 @@ async function getProductlist(req, res) {
 
 
                 // console.log("Global Array : "+projectglobalArr);
-                console.log('Category Array: '+JSON.stringify(categoryglobalArrLists))
+                /*console.log('Category Array: '+JSON.stringify(categoryglobalArrLists))
                 console.log('Brand Array: '+JSON.stringify(brandglobalArrLists))
-                console.log('Color Array: '+JSON.stringify(colorglobalArrLists))
+                console.log('Color Array: '+JSON.stringify(colorglobalArrLists))*/
                 
                 var total_record = projectsCount[0].count;
                 if(parseInt(total_record) <= parseInt(pageLimit)){
@@ -489,9 +499,7 @@ async function getProductlist(req, res) {
         // })); 
     }
 
-
-    res.set('content-type' , 'text/html; charset=mycharset'); 
-    res.render('front/lists',{
+    return res.send(JSON.stringify({
         page_title:"Ecommerce",
         allProduct:project_list, 
         categoryLists:categoryLists, 
@@ -504,10 +512,148 @@ async function getProductlist(req, res) {
         MinPrice:MinPrice,
         searchCategory:searchCategory,
         fullUrl:fullUrl
-    });
+    }));
     
 };
 exports.getProductlist = getProductlist;
+
+
+
+/** 
+ *  list
+ *  Purpose: This function is used to show listing of all arecord
+ *  Pre-condition:  None
+ *  Post-condition: None. 
+ *  Parameters: ,
+ *  Returns: json   
+*/
+async function getProductdetail(req, res) { 
+    
+      
+    if(req.params.id){
+        var id =  req.params.id;
+         
+        var pageTitle = "Ecommerce: Product Details"
+        var reaponseArr = {};   
+        var projectglobalArr = [];
+        var imageglobalArr = [];
+        var ralatedProduct = [];
+        var project_list = [];
+        var subcategory = '';
+        var pid =  String("'"+req.params.id+"'"); 
+
+        var productImages = await ProductImages.getByProductId(pid);
+        for (const itemp of productImages) { 
+             
+
+            imageArr = {};
+            imageArr.id = String(itemp.id);
+            imageArr.image = nodeSiteUrl+'/upload/product_images/'+itemp.image;
+            imageglobalArr.push(imageArr);
+        }
+
+        var productReviwes = await ProductReview.getByProductId(pid);
+        var productAvgReviwe = await ProductReview.getAverageRatting(pid);
+        var totalReview = await ProductReview.getTotalRatting(pid);
+
+        try{   
+    
+            var projects = await Products.getUserByid(id);
+
+           // console.log(projects); 
+            if(projects){ 
+                // projects.forEach(function (item, key) {
+
+                for (const item of projects) { 
+                    // console.log(item.id);
+                    
+                    productImage = await ProductImages.getDefaultImage(item.id);
+
+                    dataArr = {};
+                    dataArr.id = String(item.id);
+                    dataArr.title = String(item.title);
+                    
+                    if(productImage.length > 0){ 
+                        dataArr.default_image = nodeSiteUrl+'/upload/product_images/'+productImage[0].image; 
+                    }else{
+                        dataArr.default_image = noImageProduct; 
+                    }
+                    
+                    dataArr.description = String(item.description);
+                    dataArr.specification = String(item.specification);
+                    dataArr.price = CURRENCY+String(item.price);
+                    dataArr.quantity = String(item.quantity);
+                    
+                    dataArr.discount = String(item.discount);
+                    dataArr.discounted_price = CURRENCY+String(item.discounted_price);
+                    dataArr.is_sell = String(item.is_sell);
+                    
+                    // console.log(productAvgReviwe);
+
+                    dataArr.avrageratting = String(productAvgReviwe[0].avgratting);
+                    dataArr.totalReview = String(totalReview[0].total);
+
+                    dataArr.created_date = moment(item.created_at).format('YYYY-MM-DD hh:mm:ss');
+
+                    dataArr.meta_title = String(item.meta_title);
+                    dataArr.meta_keyword = String(item.meta_keyword);
+                    dataArr.meta_description = String(item.meta_description);
+
+                    projectglobalArr.push(dataArr);
+
+
+                    // console.log("Global Array : "+projectglobalArr);
+                    if(item.sub_category_id!=''){
+                        subcategory = item.sub_category_id.split(",").map(Number);
+                    }else{
+                        subcategory = [];
+                    }
+                    
+
+                    ralatedProduct = await Products.getRelatedData(item.category_id,item.id);
+                    
+                    if(ralatedProduct){
+                        for (const items of ralatedProduct) { 
+                            productImage = await ProductImages.getDefaultImage(items.id);
+                             
+                            if(productImage.length > 0){ 
+                                items.default_image = nodeSiteUrl+'/upload/product_images/'+productImage[0].image; 
+                            }else{
+                                items.default_image = noImageProduct; 
+                            }
+                            var avgReview = await ProductReview.getAverageRatting(items.id);
+                            if(avgReview){
+                                items.avgReview = String(avgReview[0].avgratting);    
+                            }else{
+                                items.avgReview = String('0');
+                            }
+                            
+
+                            var totalReview = await ProductReview.getTotalRatting(items.id);
+                            items.totalReview = String(totalReview[0].total);
+                        }
+                    }
+                }
+            }
+
+            project_list = projectglobalArr;
+            
+
+        }catch (e) { 
+            console.log("CaTCH eRROR: "+e);
+        }
+        // console.log('Final : '+project_list);
+
+        return res.send(JSON.stringify({
+            products: project_list,
+            images:imageglobalArr,
+            reviwes : productReviwes,
+            subcategory : subcategory,
+            ralatedProduct: ralatedProduct
+        }));
+    }
+};
+exports.getProductdetail = getProductdetail;
 
 
 /** 
@@ -604,91 +750,6 @@ exports.getProductDatalists = function (req, res) {
         })); 
     }    
 };
-
-
-/**  
- *  updateBankDetail
- *  Purpose: This function is used to updateBankDetail
- *  Pre-condition:  None
- *  Post-condition: None. 
- *  Parameters: ,
- *  Returns: void 
-*/
-async function logout(req, res) { 
-    try {
-         const { check, validationResult } = require('express-validator/check');
-         var reaponseArr = '{}'; 
-         var input = JSON.parse(JSON.stringify(req.body));  
-         console.log(input); 
-         var auth_token = req.headers.authtoken; 
-         req.checkBody('user_id', 'user_id is required').notEmpty();  
-         var errors = req.validationErrors();  
-         if(!auth_token){   	 		 
-             return res.send(JSON.stringify({ 
-                 "status": SessionExpireStatus,
-                 "message": 'Session Expired.',  
-             }));	  		 
-         }
-         if(errors){	  		 
-             return res.send(JSON.stringify({
-                 "status": failStatus,
-                 "message": errors[0].msg, 
-             })); 	  		 
-         }else{ 
-             var respondeArray = {};
-             const CheckAuthentication = await Users.CheckAuthentication(auth_token);   // Check Authentication  
-             console.log(CheckAuthentication);  
-             if(CheckAuthentication.length > 0){ 
-                 const checkUser = await Users.getUserByid(input.user_id); 
-                // console.log(checkUser); 
-                 if(checkUser.length > 0){ 
-                     var updateData = { 
-                        id    : input.user_id,      
-                        device_token : null,  
-                        device_type : null,  
-                        auth_token : null,   
-                     };  
-                     var saveRecord = await Users.updateUserData(updateData);    
-                     if(saveRecord){   
-                         return res.send(JSON.stringify({  
-                             "status": successStatus,
-                             "message": 'User logged out successfully.',  
-                             "data": {},          
-                         }));  
-                     }else{
-                         return res.send(JSON.stringify({ 
-                             "status": failStatus,  
-                             "message": 'Data could  not updated. Please try again.',
-                             "data": respondeArray  
-                         })); 
-                     }  
-                }else{
-                    return res.send(JSON.stringify({ 
-                        "status": failStatus,  
-                        "message": 'Invalid user Id.',
-                        "data": respondeArray  
-                    }));
-                }  
-             }else{
-                 return res.send(JSON.stringify({ 
-                     "status": failStatus,  
-                     "message": 'Session expired.',
-                     "data": respondeArray   
-                 })); 
-             }   
-         } 
-     } catch (err) {
-         return res.send(JSON.stringify({
-             "status": failStatus,
-             "message": err, 
-         })); 
-     }  
-     return false;  
- }; 
- exports.logout = logout; 
- 
-  
-
 
 /** 
  *  forgotPassword

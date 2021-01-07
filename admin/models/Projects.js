@@ -6,7 +6,40 @@ module.exports={
 
 		let LIMIT = '';
 		var sql='select `products`.* from `products` WHERE `products`.`is_active` = 1 ';
-		console.log(data.sort);
+		
+		// console.log(data.sort);
+		var brand = data.brand.map(Number);
+		var category = data.category.map(Number);
+
+		
+		var brandArr = brand.map( function(el) { return el; });
+		if(brandArr.length > 0){
+			sql += " AND `brand` IN ("+ brandArr +") ";
+		} 
+		
+		var categoryArr = category.map( function(el) { return el; });
+		 
+		var countcatlast = categoryArr.length;
+		if(countcatlast > 0){
+
+			--countcatlast;
+			sql += " AND ( "; 
+			category.map(function(el,index) { 				 
+            	sql += " FIND_IN_SET ('"+el+"', sub_category_id)" + ((countcatlast1=index) ? " ) ": " OR ");
+        	});
+		}
+	 	
+	 	var color = data.color;
+		if(color){
+			sql += " AND FIND_IN_SET ( '"+color+"', color ) ";
+		} 
+
+		var minprice = data.minprice;
+		var maxprice = data.maxprice;
+		if(minprice !='' && maxprice !=''){
+			sql += " AND ( price  <= '"+maxprice+"' AND price  >= '"+minprice+"' ) ";
+		} 
+
 		if(data.sort=='alphaasc'){
 			sql +=  ' ORDER BY `title` ASC ';
 		}else if(data.sort=='alphadesc'){
@@ -27,33 +60,20 @@ module.exports={
 			LIMIT =  ' OFFSET '+data.offset;  
 			sql += LIMIT;  
 		}
-		var param=[data.brand];
+		var param=[];
+		
 		console.log(sql);
-		return new Promise((resolve,reject)=>{
-				connectPool.query(sql,param, (err, result) => {
-					if (err) { 
-						reject(err)
-					} else { 
-						resolve(result)
-					}
-				})
-			})
 
-		// connectPool.query(sql,function(error,result){
-		// 	if (error) {
-		// 		console.log(error); 
-		// 		callback(null);
-		// 	}   
-		// 	else
-		// 	{	 
-		// 		if(result.length==0 || result==null){
-		// 			callback(false);
-		// 		}else{
-		// 			callback(result);
-		// 		} 
-		// 		//callback(result);
-		// 	} 
-		// }); 
+		return new Promise((resolve,reject)=>{
+			connectPool.query(sql,param, (err, result) => {
+				if (err) { 
+					reject(err)
+				} else { 
+					resolve(result)
+				}
+			})
+		})
+
 	}catch (error) { 
 			console.log(error);   
 		}   

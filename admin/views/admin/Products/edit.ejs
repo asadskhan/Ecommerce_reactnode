@@ -57,12 +57,14 @@
                         <select class="form-control select2_sub" name="sub_category_id" id="form-field-sub-category-id" multiple="">
                             <option value="">Select Sub Category</option>
                             <%  
-                            var subArray = (data[0].sub_category_id!='' && data[0].sub_category_id!=null) ? data[0].sub_category_id.split(","):[];
+                            var subArray = data[0].sub_category_id;
                             for ( var i = 0; i < subCategoryList.length; i++ ) {
-                                var selected = (subArray.indexOf(subCategoryList[i].id) < 0) ? "selected='selected'" : ""
-                            %><option value="<%=subCategoryList[ i ].id %>" <%=selected %>><%=subCategoryList[ i ].title %></option><%
-                            }
-                            %>  
+                                var selected = '';
+                                if(subArray.includes(subCategoryList[i].id)){
+                                    selected = 'selected="selected"';
+                                } 
+                            %><option value="<%=subCategoryList[ i ].id %>" <%=selected %>><%=subCategoryList[ i ].title %></option>
+                            <% } %>
                         </select> 
                         <span  class="help-block" ><%=errorData.sub_category_id%></span>  
                     </div>
@@ -86,9 +88,14 @@
                         <select class="form-control select2" name="color" id="form-field-color-id" multiple="multiple">
                             <option value="" disabled="">Select Color</option>
                             <%  
-                            var colorArray = (data[0].color!='' && data[0].color!=null) ? data[0].color.split(","):[];
+                             
+                            var colorArray = data[0].color;
                             for ( var i = 0; i < colors.length; i++ ) {
-                                var selected = (colorArray.indexOf(colors[i].id) < 0) ? "selected='selected'" : ""
+                                
+                                var selected = '';
+                                if(colorArray.includes(colors[i].id)){
+                                    selected = 'selected="selected"';
+                                } 
                             %><option value="<%=colors[ i ].id %>" <%=selected %>><%=colors[ i ].title %></option><%
                             }
                             %>  
@@ -148,6 +155,12 @@
                         <label for="form-field-deal-end-time"> Deal End Time </label><span class="required_star" aria-required="true"> *</span>
                         <input type="text" name="deal_end_time" value="<%=data[0].deal_end_time%>" id="form-field-deal-end-time" placeholder="Deal End Time" class="form-control form_datetime">  
                         <span class="help-block"><%=errorData.deal_end_time%></span>    
+                    </div>
+
+                    <div class="form-group <%=(errorData.quantity)?'has-error':''%>">
+                        <label for="form-field-quantity"> Qty </label><span class="required_star" aria-required="true"> *</span>
+                        <input type="text" name="quantity" value="<%=data[0].quantity%>" id="form-field-quantity" placeholder="Qty" class="form-control">  
+                        <span class="help-block"><%=errorData.quantity%></span>    
                     </div>
 
                     <div class="form-group <%=(errorData.price)?'has-error':''%>">

@@ -880,6 +880,21 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#78000000', e
 .fnewsletter-inner input[type="text"]{width: 100%; float: left; background: transparent; height: 48px; padding: 0 145px 0 20px; border:#000 solid 1px; border-radius: 25px; font-family: 'Open Sans', sans-serif; font-size: 14px; color: #250b0b;}
 .fnewsletter-inner input[type="submit"]{width: 135px; height: 42px; font-family: 'Poppins', sans-serif; position: absolute; top: 3px; right: 3px; border-radius: 20px; color: #fff; float: left; background: #000; font-weight: 600; font-size: 15px;}
 .fnewsletter-inner input[type="submit"]:hover{background: #ff1919;}
+#subscribe_email {
+	border: 1px solid #000;
+	border-radius: 5PX;
+	padding: 10px;
+	width: 100%;
+	float: left;
+	background: transparent;
+	height: 48px;
+	padding: 0 145px 0 20px;
+	border: #000 solid 1px;
+	border-radius: 25px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 14px;
+	color: #250b0b;
+}
 
 .fpayment-mn{width: 100%; float: left;}
 .fpayment-mn ul{width: 100%; float: left; list-style: none;}

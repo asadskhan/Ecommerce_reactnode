@@ -238,13 +238,12 @@ async function deleteRecord(id) {
 async function updateUserData(data) {	  
 	
 	try { 
-		if(data){  
-
+		if(data){
 			var sql = "UPDATE "+table+" set ? WHERE id = ?";   
 			return new Promise((resolve,reject)=>{
 				connectPool.query(sql,[data, data.id], (err, result) => {
 					if (err) {  
-						console.log(data);
+						// console.log(data);
 						reject(err)
 					} else {  
 						resolve(result)
@@ -289,7 +288,36 @@ async function saveData(data) {
 		//if (connectPool && connectPool.end) connectPool.end();
 	}  
 } 
-   
+
+/** 
+ *  getRelatedData
+ *  Purpose: This function is used to getRelatedData
+ *  Pre-condition:  None
+ *  Post-condition: None. 
+ *  Parameters: ,
+ *  Returns: void 
+*/
+async function getRelatedData(data,id) {	  
+	try {   
+			// data.split(",").map(Number)
+			var sql='select * from '+table+' where `id` != '+id+' AND `category_id` = '+data+' ORDER BY `id` DESC';
+			console.log(sql);
+			return new Promise((resolve,reject)=>{
+				connectPool.query(sql, (err, result) => {
+					if (err) { 
+						reject(err)
+					} else {  
+						resolve(result)
+					}
+				})
+			}).catch(function(e){
+				return e; 
+		});
+		 
+	}finally {
+	 
+	} 
+}  
    
 
 module.exports={
@@ -302,6 +330,7 @@ module.exports={
 	getSellData,
 	deleteRecord,
 	getFeaturedProduct,
+	getRelatedData,
 	getUserDetail:function(data,callback)
 	{	 
 		var sql='select * from users LEFT JOIN bussiness_profile ON (bussiness_profile.user_id = users.id) where users.id = ?';  

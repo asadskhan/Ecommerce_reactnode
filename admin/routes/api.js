@@ -39,15 +39,15 @@ router.get('/admin/Brand/edit/:id',  BrandController.edit);
 router.post('/admin/Brand/edit/:id', BrandController.edit); 
 router.post('/admin/Brand/add',  BrandController.add); 
 router.get('/admin/Brand/add',  BrandController.add); 
-router.get('/admin/Brand/delete/:id',  BrandController.deleteRecord);   
+router.get('/admin/Brand/delete/:id',  BrandController.deleteRecord);
 
 /** Routes for Color module  */ 
 router.get('/admin/Color/list',  ColorController.list);     
 router.get('/admin/Color/edit/:id',  ColorController.edit);     
 router.post('/admin/Color/edit/:id', ColorController.edit); 
 router.post('/admin/Color/add',  ColorController.add); 
-router.get('/admin/Color/add',  ColorController.add); 
-router.get('/admin/Color/delete/:id',  ColorController.deleteRecord);   
+// router.get('/admin/Color/add',  ColorController.add); 
+router.get('/admin/Color/delete/:id',  ColorController.deleteRecord);
 
 /** Routes for users module  */ 
 router.get('/admin/Users/list',  UsersController.list);     
@@ -67,7 +67,7 @@ router.get('/admin/Products/delete/:id', ProductsController.deleteRecord);
 router.get('/admin/Products/images/:id', ProductsController.images);   
 router.post('/admin/Products/images/:id', ProductsController.images);   
 router.get('/admin/Products/deleteImage/:id', ProductsController.deleteImage); 
-router.get('/admin/Products/setDefaultImage/:id/:product_id', ProductsController.setDefaultImage);  
+router.get('/admin/Products/setDefaultImage/:id/:product_id', ProductsController.setDefaultImage);
 
 
 /** Routes for Blog  */ 
@@ -80,7 +80,7 @@ router.get('/admin/Blog/delete/:id', BlogController.deleteRecord);
 router.get('/admin/Blog/images/:id', BlogController.images);   
 router.post('/admin/Blog/images/:id', BlogController.images);   
 router.get('/admin/Blog/deleteImage/:id', BlogController.deleteImage); 
-router.get('/admin/Blog/setDefaultImage/:id/:blog_id', BlogController.setDefaultImage);  
+router.get('/admin/Blog/setDefaultImage/:id/:blog_id', BlogController.setDefaultImage); 
 // router.get('/Blog/getProductlist', BlogController.getProductlist); 
 
 
@@ -162,6 +162,7 @@ router.get('/', HomeController.index);
 router.post('/newsletter', HomeController.newsletter);
 router.get(['/products','/products*'], HomeController.getProductlist);
 router.get('/productsdata', HomeController.getProductDatalists);
+router.get('/product/:id',  HomeController.getProductdetail);
 module.exports = router;       
 
 function requiredAuthentication(req, res, next) {

@@ -14,8 +14,8 @@ const module_name = 'Products';
  *  Returns: json   
 */
 async function getProductlist(req, res) { 
-    res.set('content-type' , 'text/html; charset=mycharset'); 
-    data = {};    
+    res.set('content-type' , 'text/html; charset=mycharset');
+    data = {};
     action = 'list'; 
     const { SQProducts } = require('../sequelize')
     SQProducts.findAll({ include: [SQProductImages]}).then(SQProducts => res.json({
